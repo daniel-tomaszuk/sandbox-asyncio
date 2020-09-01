@@ -34,6 +34,7 @@ if __name__ == "__main__":
     # try me:
     # blocking()
 
+    # will not include "blocking" tasks (run_in_executor)
     pending = asyncio.all_tasks(loop=loop)
     for task in pending:
         task.cancel()
