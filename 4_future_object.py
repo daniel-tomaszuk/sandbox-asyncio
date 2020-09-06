@@ -15,8 +15,8 @@ if __name__ == "__main__":
     print(fut1.done())  # not done
     print(fut2.done())  # not done
 
-    loop.create_task(main(fut1, 1))  # schedule, but not run yet
-    loop.create_task(main(fut2, 5))  # schedule, but not run yet
+    loop.create_task(main(fut1, 5))  # schedule, but not run yet
+    loop.create_task(main(fut2, 6))  # schedule, but not run yet
     loop.run_until_complete(fut2)
 
     print(fut1.done())  # done
