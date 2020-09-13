@@ -1,4 +1,6 @@
 import asyncio
+from typing import Any
+
 from aioredis import create_redis
 
 
@@ -16,7 +18,7 @@ class OneAtATime:
             k = next(self.ikeys)
         except StopIteration:
             raise StopAsyncIteration
-        value = await redis.get(k)
+        value = await self.redis.get(k)
         return value
 
 
@@ -26,3 +28,11 @@ async def main():
 
     async for value in OneAtATime(redis, keys):
         await do_something_with(value)
+
+
+async def do_something_with(stuff: Any):
+    print(stuff)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
