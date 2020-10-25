@@ -1,4 +1,5 @@
 import threading
+from enum import Enum
 from queue import Queue
 
 from attr import attrs, attrib
@@ -6,6 +7,12 @@ from attr import attrs, attrib
 """
 Threading example with race condition bug (on purpose).
 """
+
+
+class BotTaskEnum(str, Enum):
+    prepare: str = "PREPARE TABLE"
+    clean: str = "CLEAN TABLE"
+    shutdown: str = "SHUTDOWN"
 
 
 class ThreadBot(threading.Thread):
@@ -17,11 +24,11 @@ class ThreadBot(threading.Thread):
     def manage_table(self):
         while True:
             task = self.tasks.get()
-            if task == 'prepare table':
+            if task == BotTaskEnum.prepare:
                 kitchen.give(to=self.cutlery, knives=4, forks=4)
-            elif task == 'clear table':
+            elif task == BotTaskEnum.clean:
                 self.cutlery.give(to=kitchen, knives=4, forks=4)
-            elif task == 'shutdown':
+            elif task == BotTaskEnum.shutdown:
                 return
 
 
@@ -45,9 +52,9 @@ if __name__ == "__main__":
     bots = [ThreadBot() for i in range(10)]
     for bot in bots:
         for _ in range(tables_to_serve):
-            bot.tasks.put('prepare table')
-            bot.tasks.put('clear table')
-        bot.tasks.put('shutdown')
+            bot.tasks.put(BotTaskEnum.prepare)
+            bot.tasks.put(BotTaskEnum.clean)
+        bot.tasks.put(BotTaskEnum.shutdown)
 
     print('Kitchen inventory before service:', kitchen)
     for bot in bots:
